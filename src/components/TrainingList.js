@@ -26,9 +26,15 @@ function TrainingList() {
 
   // Columns for the AgGrid
   const columns = [
+    { headerName: 'Activity', field: 'activity', sortable: true, filter: true },
     { headerName: 'Date', field: 'date', sortable: true, filter: true, width: 300 },
     { headerName: 'Duration', field: 'duration', sortable: true, filter: true },
-    { headerName: 'Activity', field: 'activity', sortable: true, filter: true }
+    {
+      headerName: 'Customer',
+      sortable: true, filter: true,
+      valueGetter: params => (params.data.customer == null) ? "" : params.data.customer.firstname + "" +
+        params.data.customer.lastname
+    }
   ]
 
   return (
@@ -39,7 +45,8 @@ function TrainingList() {
         height: 600,
         width: '60%',
         margin: 'auto',
-        textAlign: 'center'
+        textAlign: 'center',
+        padding: '2%'
       }}
     >
 

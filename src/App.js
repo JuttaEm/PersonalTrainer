@@ -23,7 +23,7 @@ function App() {
   return (
     <div className="App">
 
-      <Box sx={{ width: '100%', typography: 'body1', borderBottom: 1, borderColor: 'divider', backgroundColor: '#EEEBDD' }}>
+      <Box sx={{ width: '100%', typography: 'body1', borderBottom: 1, borderColor: 'divider', backgroundColor: '#EAEAEA' }}>
         <Tabs value={value} onChange={handleChange} centered >
           <Tab value='one' label='Homepage' />
           <Tab value='two' label='Customers' />
