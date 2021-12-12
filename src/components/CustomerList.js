@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import ReactTable from 'react-table';
+//import ReactTable from 'react-table';
 import 'react-table/react-table.css';
 
-//import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact } from 'ag-grid-react';
 
-//import 'ag-grid-community/dist/styles/ag-grid.css';
-//import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 function CustomerList() {
 
@@ -24,16 +24,42 @@ function CustomerList() {
 
   // Columns for the AgGrid
   const columns = [
-    { Header: 'Firstname', accessor: 'firstname' },
-    { Header: 'Lastname', accessor: 'lastname' },
-    { Header: 'Email', accessor: 'email' }
+    {
+      headerName: 'Firstname',
+      valueGetter: params => (params.data.firstname == null) ? "" : params.data.firstname,
+      sortable: true, filter: true
+    },
+    {
+      headerName: 'Lastname',
+      valueGetter: params => (params.data.lastname == null) ? "" : params.data.lastname,
+      sortable: true, filter: true
+    },
+    {
+      headerName: 'Email',
+      valueGetter: params => (params.data.email == null) ? "" : params.data.email,
+      sortable: true, filter: true
+    }
   ]
 
   return (
 
-    <div>
+    <div
+      className="ag-theme-material"
+      style={{
+        height: 600,
+        width: '60%',
+        margin: 'auto',
+        textAlign: 'center'
+      }}
+    >
 
-      <ReactTable data={customers} columns={columns} />
+      <AgGridReact
+        columnDefs={columns}
+        rowData={customers}
+        pagination={true}
+        paginationPageSize={10}
+      >
+      </AgGridReact>
 
     </div>
 
@@ -41,3 +67,5 @@ function CustomerList() {
 }
 
 export default CustomerList;
+
+// <ReactTable data={customers} columns={columns} />
