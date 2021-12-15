@@ -1,7 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-//import ReactTable from 'react-table';
-//import 'react-table/react-table.css';
-//import Button from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import AddCustomer from './AddCustomer';
 import Snackbar from '@mui/material/Snackbar';
 
@@ -9,6 +7,7 @@ import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import EditCustomer from './EditCustomer';
 
 
 function CustomerList() {
@@ -46,15 +45,52 @@ function CustomerList() {
       .catch(err => console.error(err))
   }
 
+  const deleteCustomer = (url) => {
+    if (window.confirm('Are you sure?')) {
+      fetch(url, { method: 'DELETE' })
+        .then(response => {
+          if (response.ok) {
+            fetchCustomers();
+            setMsg('Customer was deleted');
+            setOpen(true);
+          } else {
+            alert('Something went wrong :(')
+          }
+        })
+        .catch(err => console.error(err))
+    }
+  }
+
+
+  const editCustomer = (url, updatedCustomer) => {
+    fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(updatedCustomer)
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchCustomers();
+          setMsg('Edit was successful :)');
+          setOpen(true);
+        } else {
+          alert('Something went wrong with the update :(')
+        }
+      })
+      .catch(err => console.error(err))
+  }
+
   // Columns for the AgGrid
   const columns = [
     {
       headerName: 'Firstname',
+      width: 150,
       valueGetter: params => (params.data.firstname == null) ? "" : params.data.firstname,
       sortable: true, filter: true
     },
     {
       headerName: 'Lastname',
+      width: 150,
       valueGetter: params => (params.data.lastname == null) ? "" : params.data.lastname,
       sortable: true, filter: true
     },
@@ -66,6 +102,7 @@ function CustomerList() {
     },
     {
       headerName: 'Phone',
+      width: 150,
       valueGetter: params => (params.data.phone == null) ? "" : params.data.phone,
       sortable: true, filter: true
     },
@@ -83,6 +120,25 @@ function CustomerList() {
       headerName: 'City',
       valueGetter: params => (params.data.city == null) ? "" : params.data.city,
       sortable: true, filter: true
+    },
+    {
+      headerName: '',
+      field: 'content.links[0].href',
+      width: 120,
+      cellRendererFramework: params => <EditCustomer params={params} editCustomer={editCustomer} />
+    },
+    {
+      headerName: '',
+      field: 'content.links[0].href',
+      width: 120,
+      cellRendererFramework: params =>
+        <Button
+          size="small"
+          variant="outlined"
+          color="error"
+          onClick={() => deleteCustomer(params.value)}>
+          Delete
+        </Button>
     }
   ]
 
@@ -98,7 +154,7 @@ function CustomerList() {
         className="ag-theme-material"
         style={{
           height: 600,
-          width: '80%',
+          width: '85%',
           margin: 'auto',
           textAlign: 'center',
           padding: '2%'
@@ -128,5 +184,3 @@ function CustomerList() {
 }
 
 export default CustomerList;
-
-// <ReactTable data={customers} columns={columns} />

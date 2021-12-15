@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-//import ReactTable from 'react-table';
-//import 'react-table/react-table.css';
 import dayjs from 'dayjs';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -11,9 +9,11 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 function TrainingList() {
 
   const [trainings, setTrainings] = useState([]);
+  const [customer, setCustomer] = useState({ firstname: '', lastname: '' });
 
   useEffect(() => {
     fetchTrainings();
+    fetchCustomer();
   }, [])
 
   const fetchTrainings = () => {
@@ -23,12 +23,19 @@ function TrainingList() {
       .catch(err => console.error(err))
   }
 
+  const fetchCustomer = () => {
+    fetch('https://customerrest.herokuapp.com/api/trainings')
+      .then(response => response.json())
+      .then(data => setCustomer({ firstname: data.content.links[2].href.firstname, lastname: data.content.links[2].href.lastname }))
+      .catch(err => console.error(err))
+  }
+
 
   // Columns for the AgGrid
   const columns = [
     { headerName: 'Activity', field: 'activity', sortable: true, filter: true },
     { headerName: 'Date', field: 'date', sortable: true, filter: true, width: 300 },
-    { headerName: 'Duration', field: 'duration', sortable: true, filter: true },
+    { headerName: 'Duration in minutes', field: 'duration', sortable: true, filter: true },
     {
       headerName: 'Customer',
       sortable: true, filter: true,
@@ -67,5 +74,3 @@ function TrainingList() {
 }
 
 export default TrainingList;
-
-// <ReactTable data={trainings} columns={columns} />
